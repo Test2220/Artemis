@@ -37,12 +37,14 @@ public class Robot extends IterativeRobot {
 	Timer autoTimer;
 	int autoCase;
 	double navXVal;
+	boolean tank;
 	
 	Command autonomousCommand;
-	Command teleOpCommand;
+	//Command teleOpCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 	
-	
+	//Create a robot drive object using PWMs 1, 2, 3 and 4
+    RobotDrive m_robotDrive;
 	
 	//CANTalon
 	private CANTalon lDriveMaster;
@@ -81,11 +83,14 @@ public class Robot extends IterativeRobot {
 		rDriveMaster = new CANTalon(RobotMap.rightMaster);
 		rDriveSlave = new CANTalon(RobotMap.rightSlave);
 		
+		//Init Robot Drive
+		m_robotDrive = new RobotDrive(lDriveMaster, lDriveSlave, rDriveMaster, rDriveSlave);
+		
 		//Set Modes
-		lDriveSlave.changeControlMode(TalonControlMode.Follower);
-		lDriveSlave.set(lDriveMaster.getDeviceID());
-		rDriveSlave.changeControlMode(TalonControlMode.Follower);
-		rDriveSlave.set(rDriveMaster.getDeviceID()); 
+		//lDriveSlave.changeControlMode(TalonControlMode.Follower);
+		//lDriveSlave.set(lDriveMaster.getDeviceID());
+		//rDriveSlave.changeControlMode(TalonControlMode.Follower);
+		//rDriveSlave.set(rDriveMaster.getDeviceID()); 
 		
 		//Initialize NavX
 		navX = new AHRS(SPI.Port.kMXP);
@@ -96,7 +101,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 
-		teleOpCommand.cancel();
+		//teleOpCommand.cancel();
 		
 	}
 
@@ -109,7 +114,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-		teleOpCommand.cancel();
+		//teleOpCommand.cancel();
 		if (autonomousCommand != null)
 			autonomousCommand.start();
 		/*autoTimer = new Timer();
@@ -168,7 +173,15 @@ public class Robot extends IterativeRobot {
 
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-			teleOpCommand.start();
+		//teleOpCommand.start();
+			
+		RobotMap.rightSol1.set(true); //True means tank drive
+		RobotMap.rightSol2.set(false);
+			
+		RobotMap.leftSol1.set(true); //True means tank drive
+		RobotMap.leftSol2.set(false);
+		
+		tank = true;
 		
 	}
 
@@ -178,9 +191,9 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		//double leftOutput = oi.deadzone(oi.getDriverJoystick().getRawAxis(1), 0.2) ;
-		//	double rightOutput = oi.deadzone(oi.getDriverJoystick().getRawAxis(5), 0.2) ;
+		//double rightOutput = oi.deadzone(oi.getDriverJoystick().getRawAxis(5), 0.2) ;
 		double rightOutput = oi.deadzone(oi.getDriverJoystick().getY(), 0.2);
-		double leftOutput = oi.deadzone(oi.getDriver2Joystick().getY(), 0.2);
+		double leftOutput = oi.deadzone(oi.getDriverJoystick().getX(), 0.2);
 		if (oi.getDriverJoystick().getRawButton(4)) {
 			
 			RobotMap.rightSol1.set(true); //True means tank drive
@@ -188,6 +201,8 @@ public class Robot extends IterativeRobot {
 			
 			RobotMap.leftSol1.set(true); //True means tank drive
 			RobotMap.leftSol2.set(false);
+			
+			tank = true;
 			
 		}
 		
@@ -199,11 +214,19 @@ public class Robot extends IterativeRobot {
 			
 			RobotMap.leftSol1.set(false); //True means tank drive
 			RobotMap.leftSol2.set(true);
+			
+			tank = false;
 		}
 		
-		
-		lDriveMaster.set(leftOutput);
-		rDriveMaster.set(-rightOutput);
+		if (tank){
+			lDriveMaster.set(leftOutput);
+			rDriveMaster.set(-rightOutput);
+			lDriveSlave.set(leftOutput);
+			rDriveSlave.set(-rightOutput);
+		}
+		else{
+			m_robotDrive.mecanumDrive_Cartesian(leftOutput, oi.deadzone(oi.getDriverJoystick().getTwist(), 0.2), rightOutput, 0);
+		}
 		
 		//mainDrive.tankDrive(oi.getDriverJoystick().getRawAxis(1), oi.getDriverJoystick().getRawAxis(5));
 		//MecanumDrive.polarDrive();
