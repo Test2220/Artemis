@@ -82,7 +82,8 @@ public class Robot extends IterativeRobot {
 		lDriveSlave = new CANTalon(RobotMap.leftSlave);
 		rDriveMaster = new CANTalon(RobotMap.rightMaster);
 		rDriveSlave = new CANTalon(RobotMap.rightSlave);
-		
+		rDriveMaster.setInverted(true);
+		rDriveSlave.setInverted(true);
 		//Init Robot Drive
 		m_robotDrive = new RobotDrive(lDriveMaster, lDriveSlave, rDriveMaster, rDriveSlave);
 		
@@ -219,13 +220,10 @@ public class Robot extends IterativeRobot {
 		}
 		
 		if (tank){
-			lDriveMaster.set(leftOutput);
-			rDriveMaster.set(-rightOutput);
-			lDriveSlave.set(leftOutput);
-			rDriveSlave.set(-rightOutput);
+			m_robotDrive.arcadeDrive(-oi.deadzone(oi.getDriverJoystick().getRawAxis(0), 0.1), -oi.deadzone(oi.getDriverJoystick().getRawAxis(1), 0.1));
 		}
 		else{
-			m_robotDrive.mecanumDrive_Cartesian(leftOutput, oi.deadzone(oi.getDriverJoystick().getTwist(), 0.2), rightOutput, 0);
+			m_robotDrive.mecanumDrive_Cartesian(-leftOutput, -oi.deadzone(oi.getDriverJoystick().getY(), 0.2), oi.deadzone(-oi.getDriverJoystick().getTwist(), 0.2), 0);
 		}
 		
 		//mainDrive.tankDrive(oi.getDriverJoystick().getRawAxis(1), oi.getDriverJoystick().getRawAxis(5));
