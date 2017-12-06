@@ -223,7 +223,7 @@ public class Robot extends IterativeRobot {
 			m_robotDrive.arcadeDrive(-oi.deadzone(oi.getDriverJoystick().getRawAxis(0), 0.1), -oi.deadzone(oi.getDriverJoystick().getRawAxis(1), 0.1));
 		}
 		else{
-			m_robotDrive.mecanumDrive_Cartesian(-leftOutput, -oi.deadzone(oi.getDriverJoystick().getY(), 0.2), oi.deadzone(-oi.getDriverJoystick().getTwist(), 0.2), 0);
+			m_robotDrive.mecanumDrive_Cartesian(-leftOutput, -oi.deadzone(oi.getDriverJoystick().getY(), 0.2), oi.deadzone(-oi.getDriverJoystick().getTwist(), 0.2), navX.getYaw());
 		}
 		
 		//mainDrive.tankDrive(oi.getDriverJoystick().getRawAxis(1), oi.getDriverJoystick().getRawAxis(5));
