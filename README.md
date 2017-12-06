@@ -61,6 +61,6 @@ OR
 ``` 
 Contact me if you have any questions at "gaganbhat6@gmail.com"
 
-I usually respond within 30 minutes of me recieving your email so please do not hesitate =)
+I usually respond within 30 minutes of me receiving your email so please do not hesitate =)
 
 ```
