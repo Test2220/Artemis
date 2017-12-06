@@ -20,7 +20,11 @@ Some patience
 
 ### Installing
 
+IF YOU WANT A STABLE VERSION FOR ECLIPSE, MAKE SURE YOU ARE IN THE "MASTER" BRANCH. 
+If you want a version with gradleRIO built in, switch to the "GradleRIO" branch.
+
 ```
+
 1. Clone the repository to your desktop
 2. Extract zip file
 3. Import project from file tree option in eclipse
