@@ -53,7 +53,7 @@ OR
 
 ```
 + Vision based movement.
-~~~+ Mecanum Drive~~~
+~~+Mecanum Drive~~
 + Cartesian mecanum drive
 + Change into commmand based programming
 
