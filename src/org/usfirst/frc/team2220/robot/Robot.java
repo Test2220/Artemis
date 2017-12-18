@@ -26,12 +26,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-
+		
 
 	public static OI oi;
 	public static RobotMap robotmap;
 	public static TankDrive tankdrive;
-	public static org.usfirst.frc.team2220.robot.commands.basicAuto basicAuto;
 	
 	//Variables
 	Timer autoTimer;
@@ -195,6 +194,7 @@ public class Robot extends IterativeRobot {
 		//double rightOutput = oi.deadzone(oi.getDriverJoystick().getRawAxis(5), 0.2) ;
 		double rightOutput = oi.deadzone(oi.getDriverJoystick().getY(), 0.2);
 		double leftOutput = oi.deadzone(oi.getDriverJoystick().getX(), 0.2);
+		double getTwist =  oi.deadzone(-oi.getDriverJoystick().getTwist(), 0.2);
 		if (oi.getDriverJoystick().getRawButton(4)) {
 			
 			RobotMap.rightSol1.set(true); //True means tank drive
@@ -223,13 +223,14 @@ public class Robot extends IterativeRobot {
 			m_robotDrive.arcadeDrive(-oi.deadzone(oi.getDriverJoystick().getRawAxis(0), 0.1), -oi.deadzone(oi.getDriverJoystick().getRawAxis(1), 0.1));
 		}
 		else{
-			m_robotDrive.mecanumDrive_Cartesian(-leftOutput, -oi.deadzone(oi.getDriverJoystick().getY(), 0.2), oi.deadzone(-oi.getDriverJoystick().getTwist(), 0.2), navX.getYaw());
+			m_robotDrive.mecanumDrive_Cartesian(-leftOutput, -rightOutput,  getTwist, 0);
 		}
 		
 		//mainDrive.tankDrive(oi.getDriverJoystick().getRawAxis(1), oi.getDriverJoystick().getRawAxis(5));
 		//MecanumDrive.polarDrive();
 		//MecanumDrive.cartesianDrive(PUT GYRO HERE);
 		SmartDashboard.putNumber("NavX Value", navX.getAngle());
+		
 
 	}
 
